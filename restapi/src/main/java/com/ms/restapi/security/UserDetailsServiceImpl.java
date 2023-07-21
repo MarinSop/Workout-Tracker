@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.ms.restapi.entities.User;
 import com.ms.restapi.repositories.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{
 
@@ -19,10 +21,8 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
+        User user = userRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),

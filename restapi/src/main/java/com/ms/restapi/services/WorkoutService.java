@@ -25,4 +25,25 @@ public class WorkoutService {
     {
         return rep.findById(id).orElseThrow(EntityNotFoundException::new);
     }
+
+    public Workout addWorkout(Workout workout)
+    {
+        return rep.save(workout);
+    }
+     
+    public Workout editWorkout(Workout workout, int workoutId)
+    {
+        Workout existingWorkout = rep.findById(workoutId).orElseThrow(EntityNotFoundException::new);
+        existingWorkout.setName(workout.getName());
+        existingWorkout.setUser(workout.getUser());
+        existingWorkout.setLogs(workout.getLogs());
+        existingWorkout.setWorkoutExercises(workout.getWorkoutExercises());
+        return rep.save(existingWorkout);
+    }
+
+    public String deleteWorkout(int id)
+    {
+        rep.delete(rep.findById(id).orElseThrow(EntityNotFoundException::new));
+        return "Workout deleted succesfully!";
+    }
 }
