@@ -1,6 +1,5 @@
 package com.ms.restapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -19,12 +18,10 @@ public class WorkoutExercise {
     @EmbeddedId
     private WorkoutExerciseId id;
 
-    @JsonIgnore
     @ManyToOne
     @MapsId("workoutId")
     private Workout workout;
 
-    @JsonIgnore
     @ManyToOne
     @MapsId("exerciseId")
     private Exercise exercise;

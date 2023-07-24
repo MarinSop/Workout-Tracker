@@ -12,10 +12,8 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // Check for the presence of the JWT token cookie
         boolean tokenPresent = isJwtTokenPresent(request);
 
-        // If the token is not present, redirect to the login page
         if (!tokenPresent) {
             response.sendRedirect("/login");
             return false;

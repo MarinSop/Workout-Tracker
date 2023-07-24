@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/new-workout.css">
+    <script type="text/javascript" th:src="@{/js/new-workout.js}"></script>
+    <title>New Workout</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Create New Workout</h2>
+        <form action="/workouts/new-workout" method="post">
+          <div class="form-group">
+            <label for="workout-name">Workout Name:</label>
+            <input type="text" id="workout-name" name="workoutName" required>
+          </div>
+    
+          <div class="form-group">
+            <label for="category-select">Select exercises category:</label>
+            <select id="category-select" name="category" onchange="selectCategory(this.options[this.selectedIndex].value)">
+                <option value="" selected disabled>Select a category</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
+          </div>
+    
+
+          <div class="form-group">
+            <label for="exercise-select">Select exercises:</label>
+            <select class="exercise-select" th:id="${category.id}" name="category" th:each="category : ${categories}" onchange="selectExercise(this.options[this.selectedIndex].value,this.options[this.selectedIndex].text)" hidden> 
+                <option th:each="exercise : ${exercises}" th:if="${exercise.category.id == category.id}" th:value="${exercise.id}" th:text="${exercise.name}"></option>
+            </select>
+          </div>
+
+
+          <div class="form-group">
+            <label>Selected exercises:</label>
+            <div id="selected-exercises">
+            </div>
+          </div>
+
+
+    
+          <input type="submit" value="Create Workout">
+        </form>
+      </div>
+</body>
+</html>

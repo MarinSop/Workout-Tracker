@@ -46,7 +46,7 @@ public class LoginController {
             return "redirect:/login?error";
         }
 
-        return "redirect:/";
+        return "redirect:/home";
     }
 
 

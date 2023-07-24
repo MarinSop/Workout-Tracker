@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.restapi.entities.Exercise;
+import com.ms.restapi.models.ExerciseFull;
+import com.ms.restapi.repositories.WorkoutExerciseRepository;
 import com.ms.restapi.services.ExerciseService;
 
 @RestController
@@ -20,6 +22,9 @@ public class ExerciseController {
     
     @Autowired
     ExerciseService ser;
+
+    @Autowired
+    WorkoutExerciseRepository work;
 
     @GetMapping("/exercises")
     public ResponseEntity<List<Exercise>> getAll()
@@ -58,12 +63,10 @@ public class ExerciseController {
         return ResponseEntity.ok(ser.findAllByWorkout(id));
     }
 
-    @GetMapping("/exercises/workouts/{id}")
-    public ResponseEntity<List<Exercise>> getAllByWorkoutAndWorkoutUser(@PathVariable int id)
-    {
-        return ResponseEntity.ok(ser.findAllByWorkoutAndUser(id));
+    @GetMapping("/exercises/workouts/{workoutId}/full")
+    public ResponseEntity<List<ExerciseFull>> findAllFullByWorkout(@PathVariable int workoutId) {
+        return ResponseEntity.ok(ser.findAllFullByWorkout(workoutId));
     }
-
 
 
 }

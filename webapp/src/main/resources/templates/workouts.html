@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/workouts.css">
+    <title>My Workouts</title>
+</head>
+    <body>
+    <div class="page">
+        <nav class="navbar">
+            <img src="your-logo.png" alt="Logo">
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/workouts" class="active">My Workouts</a></li>
+            </ul>
+            <div class="logout-button">
+                <a href="/logout" >Logout</a>
+            </div>
+        </nav>
+        <div class="main-content">
+            <div class="content-header">
+                <h1>List of your workouts</h1>
+                <a href="/workouts/new-workout"><b>Add new workout</b></a>
+            </div>
+            <div class="grid-container">
+                <div class="grid-item" th:each="workout : ${workouts}">
+                    <div class="grid-item-header">
+                        <h3 th:text="${workout.name}"></h3>
+                        <div class="grid-item-header-buttons">
+                            <a href="#" class="edit-button">Edit</a>
+                            <a href="#" class="delete-button">&#x58;</a>
+                        </div>
+                    </div>
+                    <table>
+                            <thead>
+                                <tr>
+                                    <th>Exercise name</th>
+                                    <th>Reps</th>
+                                    <th>Sets</th>
+                                    <th>Weight (kg)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="exercise : ${workout.fullExercises}">
+                                    <td th:text="${exercise.exercise.name}"></td>
+                                    <td th:text="${exercise.reps}"></td>
+                                    <td th:text="${exercise.sets}"></td>
+                                    <td th:text="${exercise.weight}"></td>
+                                </tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
