@@ -27,7 +27,6 @@ public class Exercise {
 
     private String name;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "exercise")
     private List<WorkoutExercise> workoutExercises;
 

@@ -29,6 +29,8 @@ public class WorkoutService {
     ExerciseRepository exerciseRep;
     @Autowired
     WorkoutExerciseRepository workoutExerciseRep;
+    @Autowired
+    WorkoutExerciseService workoutExerciseSer;
 
     public List<Workout> getAll()
     {
@@ -52,15 +54,15 @@ public class WorkoutService {
 
         Workout existingWorkout = rep.findById(workoutId).orElseThrow(EntityNotFoundException::new);
         existingWorkout.setName(workout.getName());
-        existingWorkout.setUser(workout.getUser());
-        existingWorkout.setLogs(workout.getLogs());
-        existingWorkout.setWorkoutExercises(workout.getWorkoutExercises());
+        existingWorkout.setWorkoutExercises(workoutExerciseSer.updateExercisesInWorkout(workoutId, workout.getWorkoutExercises()));
         return rep.save(existingWorkout);
     }
 
     public String deleteWorkout(int id)
     {
-        rep.delete(rep.findById(id).orElseThrow(EntityNotFoundException::new));
+        Workout workout = rep.findById(id).orElseThrow(EntityNotFoundException::new);
+        workout.getWorkoutExercises().forEach(e -> {workoutExerciseSer.delete(id, e.getExercise().getId());});
+        rep.delete(workout);
         return "Workout deleted succesfully!";
     }
 

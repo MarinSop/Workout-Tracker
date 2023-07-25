@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ms.restapi.entities.Exercise;
 import com.ms.restapi.entities.Workout;
-import com.ms.restapi.models.ExerciseFull;
+import com.ms.restapi.entities.WorkoutExercise;
 import com.ms.restapi.repositories.ExerciseRepository;
 import com.ms.restapi.repositories.UserRepository;
 import com.ms.restapi.repositories.WorkoutExerciseRepository;
@@ -73,12 +73,13 @@ public class ExerciseService {
         });
         return exercises;
     }
-        public List<ExerciseFull> findAllFullByWorkout(int workoutId)
+
+    public List<WorkoutExercise> findAllFullByWorkout(int workoutId)
     {
         Workout workout = workRep.findById(workoutId).orElseThrow(EntityNotFoundException::new);
-        List<ExerciseFull> exercises = new ArrayList<ExerciseFull>();
+        List<WorkoutExercise> exercises = new ArrayList<WorkoutExercise>();
         workExerRep.findAllByWorkout(workout).forEach(exer -> {
-            exercises.add(new ExerciseFull(exer.getExercise(), exer.getReps(), exer.getSets(), exer.getWeight()));
+            exercises.add(exer);
         });
         return exercises;
     }

@@ -14,6 +14,5 @@ public class Workout {
     
     int id;
     String name;
-    List<Exercise> exercises = new ArrayList<Exercise>();
-    List<ExerciseFull> fullExercises = new ArrayList<ExerciseFull>();
+    List<WorkoutExercise> workoutExercises = new ArrayList<WorkoutExercise>();
 }

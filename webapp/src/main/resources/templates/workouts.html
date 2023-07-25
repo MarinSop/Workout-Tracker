@@ -28,8 +28,8 @@
                     <div class="grid-item-header">
                         <h3 th:text="${workout.name}"></h3>
                         <div class="grid-item-header-buttons">
-                            <a href="#" class="edit-button">Edit</a>
-                            <a href="#" class="delete-button">&#x58;</a>
+                            <a th:href="@{/workouts/edit-workout/{workoutId}(workoutId=${workout.id})}" class="edit-button">Edit</a>
+                            <a th:href="@{/workouts/delete-workout/{workoutId}(workoutId=${workout.id})}" class="delete-button">&#x58;</a>
                         </div>
                     </div>
                     <table>
@@ -42,7 +42,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="exercise : ${workout.fullExercises}">
+                                <tr th:each="exercise : ${workout.workoutExercises}">
                                     <td th:text="${exercise.exercise.name}"></td>
                                     <td th:text="${exercise.reps}"></td>
                                     <td th:text="${exercise.sets}"></td>

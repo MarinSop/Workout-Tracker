@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/edit-workout.css">
+    <script type="text/javascript" th:src="@{/js/edit-workout.js}"></script>
+    <title>Edit Workout</title>
+</head>
+    <body>
+        <div class="page">
+            <nav class="navbar">
+                <img  alt="Logo">
+                <ul>
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/workouts">My Workouts</a></li>
+                </ul>
+                <div class="logout-button">
+                    <a href="/logout" >Logout</a>
+                </div>
+            </nav>
+            <div class="main-content">
+                <form th:action="@{/workouts/edit-workout/{workoutId}(workoutId=${workout.id})}" th:object="${workout}" method="post">
+                    <div class="form-group">
+                        <input type="hidden" th:field="${workout.id}">
+                        <label for="workout-name">Workout Name:</label>
+                        <input type="text" name="workoutName" th:field="${workout.name}" required>
+                    </div>
+                    <div class="exercises">
+                        <div class="exercises-header">
+                            <h1>Exercise list</h1>
+                            <label for="category-select">Select exercises category:</label>
+                            <select id="category-select" name="category" onchange="selectCategory(this.options[this.selectedIndex].value)">
+                                <option value="" selected disabled>Select a category</option>
+                                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                            </select>
+                            <label for="exercise-select">Select exercises:</label>
+                            <select class="exercise-select" th:id="${category.id}" name="category" th:each="category : ${categories}" onchange="selectExercise(this.options[this.selectedIndex].value,this.options[this.selectedIndex].text)" hidden> 
+                                <option disabled selected>Select exercise</option>
+                                <option th:each="exercise : ${allexercises}" th:if="${exercise.category.id == category.id}" th:value="${exercise.id}" th:text="${exercise.name}"></option>
+                            </select>
+                        </div>
+
+                        <div th:id="*{workoutExercises[__${exercisesStat.index}__].exercise.id}" class="exercise-group" th:each="exercise, exercisesStat : *{workoutExercises}">
+                            <input type="hidden" th:field="*{workoutExercises[__${exercisesStat.index}__].exercise.id}">
+                            <div class="form-group">
+                                <label>Exercise Name</label>
+                                <input type="text" th:field="*{workoutExercises[__${exercisesStat.index}__].exercise.name}" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Exercise reps</label>
+                                <input type="number" th:field="*{workoutExercises[__${exercisesStat.index}__].reps}">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Exercise sets</label>
+                                <input type="number" th:field="*{workoutExercises[__${exercisesStat.index}__].sets}">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Exercise weight</label>
+                                <input type="number" th:field="*{workoutExercises[__${exercisesStat.index}__].weight}">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="button" value="&#x58;" th:attr="onclick=|deleteExercise('${exercise.exercise.id}')|"  >
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Edit Workout">
+                  </form>
+            </div>
+        </div>
+    </body>
+</html>

@@ -13,14 +13,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import com.ms.webapp.models.Exercise;
 import com.ms.webapp.models.ExerciseCategory;
-import com.ms.webapp.models.ExerciseFull;
 import com.ms.webapp.models.ExerciseListWrapper;
+import com.ms.webapp.models.WorkoutExercise;
 import com.ms.webapp.models.Workout;
 
 import jakarta.servlet.http.Cookie;
@@ -43,11 +44,11 @@ public class WorkoutsController {
         List<Workout> workouts = workoutResponse.getBody();
 
         workouts.forEach(work -> {
-        ResponseEntity<List<ExerciseFull>> exercisesResponse = restTemplate.exchange("http://localhost:8080/exercises/workouts/"+ work.getId()+"/full",
+        ResponseEntity<List<WorkoutExercise>> exercisesResponse = restTemplate.exchange("http://localhost:8080/exercises/workouts/"+ work.getId()+"/full",
         HttpMethod.GET,
         getCookieHeader(req),
-        new ParameterizedTypeReference<List<ExerciseFull>>(){});
-        work.setFullExercises(exercisesResponse.getBody());
+        new ParameterizedTypeReference<List<WorkoutExercise>>(){});
+        work.setWorkoutExercises(exercisesResponse.getBody());
         });
         model.addAttribute("workouts", workoutResponse.getBody());
 
@@ -88,10 +89,68 @@ public class WorkoutsController {
         HttpEntity<Workout> request = new HttpEntity<>(workout, headers);
         ResponseEntity<Workout> workoutResponse = restTemplate.postForEntity("http://localhost:8080/workouts", request,Workout.class);
         exercises.getExercises().forEach(exer -> {
-            restTemplate.postForLocation("http://localhost:8080/workouts/"+ workoutResponse.getBody().getId() + "/exercises/" + exer.getId() + "/"+exer.getSets()+"/"+ exer.getReps() +"/"+ exer.getWeight(), getCookieHeader(req));
+            restTemplate.postForLocation("http://localhost:8080/workouts/"+ workoutResponse.getBody().getId() + "/exercises/" + exer.getExercise().getId() + "/"+exer.getSets()+"/"+ exer.getReps() +"/"+ exer.getWeight(), getCookieHeader(req));
         });
         return "redirect:/workouts";
     }
+
+    @GetMapping("/workouts/edit-workout/{id}")
+    public String editWorkoutPage(@PathVariable int id, Model model, HttpServletRequest req)
+    {
+        ResponseEntity<Workout> workoutResponse = restTemplate.exchange("http://localhost:8080/workouts/"+ id,
+        HttpMethod.GET,
+        getCookieHeader(req),
+        new ParameterizedTypeReference<Workout>(){});
+        Workout workout = workoutResponse.getBody();
+
+        ResponseEntity<List<WorkoutExercise>> exercisesResponse = restTemplate.exchange("http://localhost:8080/exercises/workouts/"+ workout.getId()+"/full",
+        HttpMethod.GET,
+        getCookieHeader(req),
+        new ParameterizedTypeReference<List<WorkoutExercise>>(){});
+        workout.setWorkoutExercises(exercisesResponse.getBody());
+
+        model.addAttribute("workout", workoutResponse.getBody());
+
+        ResponseEntity<List<ExerciseCategory>> exerciseCategoryResponse = restTemplate.exchange("http://localhost:8080/exercisecategories",
+        HttpMethod.GET,
+        getCookieHeader(req),
+        new ParameterizedTypeReference<List<ExerciseCategory>>(){});
+
+        model.addAttribute("categories", exerciseCategoryResponse.getBody());
+
+        ResponseEntity<List<Exercise>> allExercisesResponse = restTemplate.exchange("http://localhost:8080/exercises",
+        HttpMethod.GET,
+        getCookieHeader(req),
+        new ParameterizedTypeReference<List<Exercise>>(){});
+
+        model.addAttribute("allexercises", allExercisesResponse.getBody());
+
+
+        return "edit-workout";
+    }
+
+    @PostMapping("/workouts/edit-workout/{id}")
+    public String editWorkout(@ModelAttribute Workout workout, @PathVariable int id, HttpServletRequest req)
+    {
+        workout.getWorkoutExercises().removeIf(e -> e.getExercise() == null);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(getToken(req));
+        HttpEntity<Workout> request = new HttpEntity<>(workout, headers);
+        restTemplate.exchange("http://localhost:8080/workouts/"+ id, HttpMethod.PUT, request, Workout.class);
+        return "redirect:/workouts";
+    }
+
+
+    @GetMapping("/workouts/delete-workout/{id}")
+    public String deleteWorkout(@PathVariable int id, HttpServletRequest req)
+    {
+        restTemplate.exchange("http://localhost:8080/workouts/"+ id, HttpMethod.DELETE,getCookieHeader(req), Workout.class);
+        return "redirect:/workouts";
+    }
+
+
+
 
     HttpEntity<String> getCookieHeader(HttpServletRequest req)
     {

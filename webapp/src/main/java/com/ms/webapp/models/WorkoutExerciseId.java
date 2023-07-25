@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExerciseWorkout {
-    int id;
-    int sets;
-    int reps;
-    int weight;
+public class WorkoutExerciseId {
+    
+    int workoutId;
+    int exerciseId;
 }

@@ -1,6 +1,6 @@
-package com.ms.restapi.models;
+package com.ms.webapp.models;
 
-import com.ms.restapi.entities.Exercise;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExerciseFull {
+public class WorkoutExercise {
+    WorkoutExerciseId id;
+    @JsonIgnore
+    Workout workout;
     Exercise exercise;
-    int reps;
     int sets;
+    int reps;
     int weight;
 }

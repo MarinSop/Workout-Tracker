@@ -41,14 +41,14 @@ public class WorkoutController {
         return ResponseEntity.ok(ser.addWorkout(workout,authentication));
     }
      
-    @PutMapping("/workouts/{id}")
+    @PutMapping("/workouts/{workoutId}")
     public ResponseEntity<Workout> editWorkout(@RequestBody Workout workout, @PathVariable int workoutId)
     {
         return ResponseEntity.ok(ser.editWorkout(workout,workoutId));
     }
 
     @DeleteMapping("/workouts/{id}")
-    public ResponseEntity<String> deleteWorkout(int id)
+    public ResponseEntity<String> deleteWorkout(@PathVariable int id)
     {
         ser.deleteWorkout(id);
         return ResponseEntity.ok("Workout deleted succesfully!");

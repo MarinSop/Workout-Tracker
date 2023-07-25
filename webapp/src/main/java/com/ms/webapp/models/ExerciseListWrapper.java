@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class ExerciseListWrapper {
-    private List<ExerciseWorkout> exercises;
+    private List<WorkoutExercise> exercises;
 
 
-    public List<ExerciseWorkout> getExercises() {
+    public List<WorkoutExercise> getExercises() {
         return exercises;
     }
 
-    public void setExercises(List<ExerciseWorkout> exercises) {
+    public void setExercises(List<WorkoutExercise> exercises) {
         this.exercises = exercises;
     }
 }
