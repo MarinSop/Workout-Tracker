@@ -87,11 +87,36 @@ public class WorkoutsController {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(getToken(req));
         HttpEntity<Workout> request = new HttpEntity<>(workout, headers);
+
         ResponseEntity<Workout> workoutResponse = restTemplate.postForEntity("http://localhost:8080/workouts", request,Workout.class);
-        exercises.getExercises().forEach(exer -> {
-            restTemplate.postForLocation("http://localhost:8080/workouts/"+ workoutResponse.getBody().getId() + "/exercises/" + exer.getExercise().getId() + "/"+exer.getSets()+"/"+ exer.getReps() +"/"+ exer.getWeight(), getCookieHeader(req));
-        });
-        return "redirect:/workouts";
+        if(workoutResponse.getStatusCode().is2xxSuccessful())
+        {
+            try
+             {
+             if(exercises.getExercises() != null)
+             {
+                 exercises.getExercises().forEach(exer -> 
+                 {
+                     ResponseEntity<WorkoutExercise> exerResponse = restTemplate.postForEntity("http://localhost:8080/workouts/"+ workoutResponse.getBody().getId() + "/exercises/" + exer.getId().getExerciseId() + "/"+exer.getSets()+"/"+ exer.getReps() +"/"+ exer.getWeight(), getCookieHeader(req),WorkoutExercise.class);
+                     if(!exerResponse.getStatusCode().is2xxSuccessful())
+                     {
+                         throw new RuntimeException("Failed to add exercise with ID: " + exer.getExercise().getId());
+                     }
+                 });
+             }
+
+            return "redirect:/workouts";
+             }
+             catch(RuntimeException e)
+            {
+                 restTemplate.delete("http://localhost:8080/workouts/"+ workoutResponse.getBody().getId(),getCookieHeader(req));
+                 return "redirect:/error";
+             }
+        }
+        else
+        {
+            return "redirect:/error";
+        }
     }
 
     @GetMapping("/workouts/edit-workout/{id}")
@@ -145,8 +170,12 @@ public class WorkoutsController {
     @GetMapping("/workouts/delete-workout/{id}")
     public String deleteWorkout(@PathVariable int id, HttpServletRequest req)
     {
-        restTemplate.exchange("http://localhost:8080/workouts/"+ id, HttpMethod.DELETE,getCookieHeader(req), Workout.class);
-        return "redirect:/workouts";
+        ResponseEntity<String> response = restTemplate.exchange("http://localhost:8080/workouts/"+ id, HttpMethod.DELETE,getCookieHeader(req), String.class);
+        if(response.getStatusCode().is2xxSuccessful())
+        {
+            return "redirect:/workouts";
+        }
+        return "redirect:/error";
     }
 
 

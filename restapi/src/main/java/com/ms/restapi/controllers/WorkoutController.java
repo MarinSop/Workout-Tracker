@@ -3,6 +3,7 @@ package com.ms.restapi.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.restapi.entities.Workout;
@@ -59,5 +61,16 @@ public class WorkoutController {
     {
         return ResponseEntity.ok(ser.addExerciseToWorkout(workoutId,exercisesId,sets,reps,weight));
 
+    }
+
+    @GetMapping("/workouts/pages")
+    public ResponseEntity<Page<Workout>> getWorkouts(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "6") int size,
+        @RequestParam(required = false) String query,
+        @RequestParam(required = false) Integer category,
+        @RequestParam(defaultValue = "asc") String sortDirection) {
+
+    return ResponseEntity.ok(ser.getWorkoutsPage(page, size, query, category, sortDirection));
     }
 }

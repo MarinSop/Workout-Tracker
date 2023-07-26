@@ -3,6 +3,10 @@ package com.ms.restapi.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +66,7 @@ public class WorkoutService {
     {
         Workout workout = rep.findById(id).orElseThrow(EntityNotFoundException::new);
         workout.getWorkoutExercises().forEach(e -> {workoutExerciseSer.delete(id, e.getExercise().getId());});
+        workout.getWorkoutExercises().clear();
         rep.delete(workout);
         return "Workout deleted succesfully!";
     }
@@ -80,5 +85,20 @@ public class WorkoutService {
         
         return workoutExerciseRep.save(workoutExercise);
 
+    }
+
+    public Page<Workout> getWorkoutsPage(int page,int size,String query,Integer category,String sortDirection) 
+    {
+        Pageable pageable;
+
+        Sort sort = Sort.by("name");
+        if ("desc".equalsIgnoreCase(sortDirection)) {
+            sort = sort.descending();
+        }
+        pageable = PageRequest.of(page, size, sort);
+
+        Page<Workout> result = rep.searchWorkouts(query, category, pageable);
+
+        return result;
     }
 }

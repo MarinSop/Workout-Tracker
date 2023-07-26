@@ -2,7 +2,6 @@ package com.ms.restapi.entities;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -36,7 +35,6 @@ public class Workout {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "workouts")
     private List<Log> logs;
 }

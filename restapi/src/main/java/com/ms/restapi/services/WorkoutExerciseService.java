@@ -47,11 +47,12 @@ public class WorkoutExerciseService {
 
     public String delete(int workoutId, int exerciseId)
     {
-        WorkoutExerciseId id = new WorkoutExerciseId(workoutId, exerciseId);
-        rep.findById(id);
-        rep.deleteById(id);
+        WorkoutExercise workutExercise = rep.findByIdWorkoutIdAndIdExerciseId(workoutId, exerciseId).orElseThrow(EntityNotFoundException::new);
+        rep.delete(workutExercise);
         return "Success";
     }
+
+    
 
 
     

@@ -34,7 +34,7 @@
 
                 let exerciseIdElement = document.createElement("input");
                 exerciseIdElement.setAttribute("type","hidden");
-                exerciseIdElement.setAttribute("name","exercises["+ index +"].id");
+                exerciseIdElement.setAttribute("name","exercises["+ index +"].id.exerciseId");
                 exerciseIdElement.setAttribute("value", exerciseId);
                 newExercise.append(exerciseIdElement);
 
@@ -72,3 +72,4 @@
                 exerciseWeightElement.setAttribute("min","0");
                 newExercise.append(exerciseWeightElement);
         }
+      
