@@ -68,9 +68,9 @@ public class WorkoutController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "6") int size,
         @RequestParam(required = false) String query,
-        @RequestParam(required = false) Integer category,
-        @RequestParam(defaultValue = "asc") String sortDirection) {
+        @RequestParam(defaultValue = "asc") String sortDirection,
+        Authentication auth){
 
-    return ResponseEntity.ok(ser.getWorkoutsPage(page, size, query, category, sortDirection));
+    return ResponseEntity.ok(ser.getWorkoutsPage(page, size, query, sortDirection, auth));
     }
 }

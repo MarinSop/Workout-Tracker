@@ -1,13 +1,14 @@
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    flex-direction: column;
-    margin: 0;
-  }
+body 
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+}
 
-  .login-container {
+   .register-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,7 +18,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  .login-container h2 {
+  .register-container h2 {
     margin: 0;
     margin-bottom: 20px;
   }
@@ -55,13 +56,7 @@ body {
     color: red;
     background-color: #FFCACA;
     border: 1px solid #FF5A5A;
-  }
-
-  .logout-message {
-    color: green;
-    background-color: #C9FFC5;
-    border: 1px solid #50C850;
-  }
+  } 
 
   .form-group a {
     color: #007bff; 

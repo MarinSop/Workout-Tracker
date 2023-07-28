@@ -36,7 +36,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests -> 
-        authorizeRequests.anyRequest().authenticated())
+        authorizeRequests.requestMatchers("/api/auth/register").permitAll()
+        .anyRequest().authenticated())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
         .httpBasic(Customizer.withDefaults())

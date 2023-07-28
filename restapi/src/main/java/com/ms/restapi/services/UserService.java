@@ -3,6 +3,7 @@ package com.ms.restapi.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ms.restapi.entities.User;
@@ -17,6 +18,9 @@ public class UserService {
     @Autowired
     UserRepository rep;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     public List<User> getAll()
     {
         return rep.findAll();
@@ -30,6 +34,7 @@ public class UserService {
     public User addUser(User user)
     {
         rep.findByUsername(user.getUsername()).ifPresent(u -> {throw new EntityExistsException("User already exists!");});
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return rep.save(user);
 
     }

@@ -23,8 +23,14 @@
                 <h1>List of your workouts</h1>
                 <a href="/workouts/new-workout"><b>Add new workout</b></a>
             </div>
+            <div class="searchbar">
+                <form>
+                    <input type="text" placeholder="Search for workout or exercise name." name="query">
+                    <input type="submit" value="Search">
+                </form>
+            </div>
             <div class="grid-container">
-                <div class="grid-item" th:each="workout : ${workouts}">
+                <div class="grid-item" th:each="workout : ${workouts.content}">
                     <div class="grid-item-header">
                         <h3 th:text="${workout.name}"></h3>
                         <div class="grid-item-header-buttons">
@@ -51,6 +57,21 @@
                             </tbody>
                     </table>
                 </div>
+            </div>
+            <div class="page-navigation">
+                <a th:if="${workouts.number != 0}" href="/workouts?page=1">First</a>
+
+                <a th:each="i : ${#numbers.sequence(3, 1, -1)}" th:unless="${0 > workouts.number - i}"
+                    th:text="${workouts.number + 1 - i}"
+                    th:href="@{/workouts?page={page}(page=${workouts.number + 1 - i})}"></a>
+
+                <a class="active-page" th:text="${workouts.number + 1}" th:href="@{/workouts?page={page}(page=${workouts.number + 1})}"></a>
+
+                <a th:each="i : ${#numbers.sequence(1, 3, 1)}" th:unless="${workouts.number + i >= workouts.totalPages}"
+                    th:text="${workouts.number + 1 + i}"
+                    th:href="@{/workouts?page={page}(page=${workouts.number + 1 + i})}"></a>
+
+                <a th:if="${workouts.number != workouts.totalPages-1 }" th:href="@{/workouts?page={page}(page=${workouts.totalPages})}">Last</a>
             </div>
         </div>
     </div>

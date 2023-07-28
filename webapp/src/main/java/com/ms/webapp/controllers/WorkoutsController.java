@@ -22,6 +22,7 @@ import com.ms.webapp.models.Exercise;
 import com.ms.webapp.models.ExerciseCategory;
 import com.ms.webapp.models.ExerciseListWrapper;
 import com.ms.webapp.models.WorkoutExercise;
+import com.ms.webapp.models.WorkoutPage;
 import com.ms.webapp.models.Workout;
 
 import jakarta.servlet.http.Cookie;
@@ -32,26 +33,18 @@ public class WorkoutsController {
     
     @Autowired
     private RestTemplate restTemplate;
-
+    
     @GetMapping("/workouts")
-    public String myWorkoutsPage(Model model, HttpServletRequest req)
+    public String myWorkoutsWithPages(Model model, HttpServletRequest req, @RequestParam(defaultValue = "1") int page,
+    @RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "asc") String sort)
     {
-
-        ResponseEntity<List<Workout>> workoutResponse = restTemplate.exchange("http://localhost:8080/workouts",
+        String url ="http://localhost:8080/workouts/pages?query=" + query + "&page="+ (page - (int)1);
+        ResponseEntity<WorkoutPage> workoutResponse = restTemplate.exchange(url,
         HttpMethod.GET,
         getCookieHeader(req),
-        new ParameterizedTypeReference<List<Workout>>(){});
-        List<Workout> workouts = workoutResponse.getBody();
+        new ParameterizedTypeReference<WorkoutPage>(){});
 
-        workouts.forEach(work -> {
-        ResponseEntity<List<WorkoutExercise>> exercisesResponse = restTemplate.exchange("http://localhost:8080/exercises/workouts/"+ work.getId()+"/full",
-        HttpMethod.GET,
-        getCookieHeader(req),
-        new ParameterizedTypeReference<List<WorkoutExercise>>(){});
-        work.setWorkoutExercises(exercisesResponse.getBody());
-        });
         model.addAttribute("workouts", workoutResponse.getBody());
-
 
         return "workouts";
     }

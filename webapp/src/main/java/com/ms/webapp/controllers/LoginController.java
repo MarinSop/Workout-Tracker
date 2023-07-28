@@ -1,6 +1,7 @@
 package com.ms.webapp.controllers;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class LoginController {
 
+    @Autowired
+    RestTemplate restTemplate;
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -81,7 +84,31 @@ public class LoginController {
 
         return "redirect:/login?logout";
     }
-}
-    
 
+
+    @GetMapping("/register")
+    public String registerPage(HttpServletRequest request, Model model)
+    {
+        model.addAttribute("register", new LoginRequest());
+
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerAccount(LoginRequest loginRequest)
+    {
+        try
+        {
+            restTemplate.postForEntity("http://localhost:8080/api/auth/register",
+             loginRequest,LoginRequest.class);
+        }
+        catch(Exception e)
+        {
+            return "redirect:/register?error";
+        }
+        
+        return "redirect:/login";
+    }
+    
+}
 

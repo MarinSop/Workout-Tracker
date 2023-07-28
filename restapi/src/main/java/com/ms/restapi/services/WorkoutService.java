@@ -87,7 +87,7 @@ public class WorkoutService {
 
     }
 
-    public Page<Workout> getWorkoutsPage(int page,int size,String query,Integer category,String sortDirection) 
+    public Page<Workout> getWorkoutsPage(int page,int size,String query,String sortDirection,Authentication auth) 
     {
         Pageable pageable;
 
@@ -97,7 +97,7 @@ public class WorkoutService {
         }
         pageable = PageRequest.of(page, size, sort);
 
-        Page<Workout> result = rep.searchWorkouts(query, category, pageable);
+        Page<Workout> result = rep.searchWorkouts(query, auth.getName(), pageable);
 
         return result;
     }

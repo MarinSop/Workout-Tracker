@@ -13,7 +13,7 @@ public interface WorkoutRepository extends JpaRepository<Workout,Integer>{
         @Query("SELECT w FROM Workout w " +
         "LEFT JOIN FETCH w.workoutExercises we " +
         "LEFT JOIN FETCH we.exercise e " +
-        "WHERE (w.name LIKE %:query% OR e.name LIKE %:query%) " +
-        "AND (:categoryId IS NULL OR e.category.id = :categoryId)")
-    Page<Workout> searchWorkouts(@Param("query") String query, @Param("categoryId") Integer categoryId, Pageable pageable);
+        "WHERE (w.name LIKE %:query% OR e.name LIKE %:query%) " + 
+        "AND (w.user.username = :username)")
+    Page<Workout> searchWorkouts(@Param("query") String query, @Param("username") String username, Pageable pageable);
 }
