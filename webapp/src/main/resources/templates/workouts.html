@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/workouts.css">
+    <script type="text/javascript" th:src="@{/js/home.js}"></script>
     <title>My Workouts</title>
 </head>
-    <body>
+
+<body>
     <div class="page">
         <nav class="navbar">
-            <img src="your-logo.png" alt="Logo">
             <ul>
                 <li><a href="/home">Home</a></li>
                 <li><a href="/workouts" class="active">My Workouts</a></li>
+                <li><a href="/statistics">Statistics</a></li>
             </ul>
             <div class="logout-button">
-                <a href="/logout" >Logout</a>
+                <a href="/logout">Logout</a>
             </div>
         </nav>
         <div class="main-content">
@@ -34,46 +37,50 @@
                     <div class="grid-item-header">
                         <h3 th:text="${workout.name}"></h3>
                         <div class="grid-item-header-buttons">
-                            <a th:href="@{/workouts/edit-workout/{workoutId}(workoutId=${workout.id})}" class="edit-button">Edit</a>
-                            <a th:href="@{/workouts/delete-workout/{workoutId}(workoutId=${workout.id})}" class="delete-button">&#x58;</a>
+                            <a th:href="@{/workouts/edit-workout/{workoutId}(workoutId=${workout.id})}"
+                                class="edit-button">Edit</a>
+                            <a th:href="@{/workouts/delete-workout/{workoutId}(workoutId=${workout.id})}"
+                                class="delete-button">&#x58;</a>
                         </div>
                     </div>
                     <table>
-                            <thead>
-                                <tr>
-                                    <th>Exercise name</th>
-                                    <th>Reps</th>
-                                    <th>Sets</th>
-                                    <th>Weight (kg)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="exercise : ${workout.workoutExercises}">
-                                    <td th:text="${exercise.exercise.name}"></td>
-                                    <td th:text="${exercise.reps}"></td>
-                                    <td th:text="${exercise.sets}"></td>
-                                    <td th:text="${exercise.weight}"></td>
-                                </tr>
-                            </tbody>
+                        <thead>
+                            <tr>
+                                <th>Exercise name</th>
+                                <th>Reps</th>
+                                <th>Sets</th>
+                                <th>Weight (kg)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="exercise : ${workout.workoutExercises}">
+                                <td th:text="${exercise.exercise.name}"></td>
+                                <td th:text="${exercise.reps}"></td>
+                                <td th:text="${exercise.sets}"></td>
+                                <td th:text="${exercise.weight}"></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
             <div class="page-navigation">
-                <a th:if="${workouts.number != 0}" href="/workouts?page=1">First</a>
+                <a th:if="${!workouts.first}" href="/workouts?page=1">First</a>
 
                 <a th:each="i : ${#numbers.sequence(3, 1, -1)}" th:unless="${0 > workouts.number - i}"
                     th:text="${workouts.number + 1 - i}"
                     th:href="@{/workouts?page={page}(page=${workouts.number + 1 - i})}"></a>
 
-                <a class="active-page" th:text="${workouts.number + 1}" th:href="@{/workouts?page={page}(page=${workouts.number + 1})}"></a>
+                <a class="active-page" th:text="${workouts.number + 1}"
+                    th:href="@{/workouts?page={page}(page=${workouts.number + 1})}"></a>
 
                 <a th:each="i : ${#numbers.sequence(1, 3, 1)}" th:unless="${workouts.number + i >= workouts.totalPages}"
                     th:text="${workouts.number + 1 + i}"
                     th:href="@{/workouts?page={page}(page=${workouts.number + 1 + i})}"></a>
 
-                <a th:if="${workouts.number != workouts.totalPages-1 }" th:href="@{/workouts?page={page}(page=${workouts.totalPages})}">Last</a>
+                <a th:if="${!workouts.last}" th:href="@{/workouts?page={page}(page=${workouts.totalPages})}">Last</a>
             </div>
         </div>
     </div>
-    </body>
+</body>
+
 </html>

@@ -26,40 +26,40 @@ public class WorkoutController {
     WorkoutService ser;
 
     @GetMapping("/workouts")
-    public ResponseEntity<List<Workout>> getAll()
+    public ResponseEntity<List<Workout>> getAll(Authentication auth)
     {
-        return ResponseEntity.ok(ser.getAll());
+        return ResponseEntity.ok(ser.getAll(auth));
     }
 
     @GetMapping("/workouts/{id}")
-    public ResponseEntity<Workout> getByID(@PathVariable int id)
+    public ResponseEntity<Workout> getByID(@PathVariable int id,Authentication auth)
     {
-        return ResponseEntity.ok(ser.getByID(id));
+        return ResponseEntity.ok(ser.getByID(id,auth));
     }
 
     @PostMapping("/workouts")
-       public ResponseEntity<Workout> addWorkout(@RequestBody Workout workout, Authentication authentication)
+       public ResponseEntity<Workout> addWorkout(@RequestBody Workout workout, Authentication auth)
     {
-        return ResponseEntity.ok(ser.addWorkout(workout,authentication));
+        return ResponseEntity.ok(ser.addWorkout(workout,auth));
     }
      
     @PutMapping("/workouts/{workoutId}")
-    public ResponseEntity<Workout> editWorkout(@RequestBody Workout workout, @PathVariable int workoutId)
+    public ResponseEntity<Workout> editWorkout(@RequestBody Workout workout, @PathVariable int workoutId, Authentication auth)
     {
-        return ResponseEntity.ok(ser.editWorkout(workout,workoutId));
+        return ResponseEntity.ok(ser.editWorkout(workout,workoutId,auth));
     }
 
     @DeleteMapping("/workouts/{id}")
-    public ResponseEntity<String> deleteWorkout(@PathVariable int id)
+    public ResponseEntity<String> deleteWorkout(@PathVariable int id, Authentication auth)
     {
-        ser.deleteWorkout(id);
+        ser.deleteWorkout(id,auth);
         return ResponseEntity.ok("Workout deleted succesfully!");
     }
 
     @PostMapping("/workouts/{workoutId}/exercises/{exercisesId}/{sets}/{reps}/{weight}")
-    public ResponseEntity<WorkoutExercise> addExerciseToWorkout(@PathVariable int workoutId,@PathVariable int exercisesId,@PathVariable int sets,@PathVariable int reps,@PathVariable int weight)
+    public ResponseEntity<WorkoutExercise> addExerciseToWorkout(@PathVariable int workoutId,@PathVariable int exercisesId,@PathVariable int sets,@PathVariable int reps,@PathVariable int weight, Authentication auth)
     {
-        return ResponseEntity.ok(ser.addExerciseToWorkout(workoutId,exercisesId,sets,reps,weight));
+        return ResponseEntity.ok(ser.addExerciseToWorkout(workoutId,exercisesId,sets,reps,weight, auth));
 
     }
 

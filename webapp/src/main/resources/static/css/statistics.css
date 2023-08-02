@@ -59,50 +59,8 @@ nav .active {
   overflow-x: hidden;
 }
 
-.container {
-  width: 80%;
-  height: 80%;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+.main-content h3 {
+    color: #333; 
+    margin: 10px;
+
 }
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-input[type="text"],
-select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-
-input[type="submit"] {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-input[type="submit"]:hover {
-  background-color: #0056b3;
-}
-
-h3{text-align: center;}
-table{width: 100%; text-align: center;}

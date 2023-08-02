@@ -1,20 +1,21 @@
 package com.ms.webapp.models;
 
+import java.time.LocalDate;
 import java.util.List;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkoutPage {
-    private List<Workout> content;
-    private int totalPages;
-    private boolean last;
-    private boolean first;
-    private int number;
-    private int size;
+public class Log {
+    
+    private int id;
+    
+    private LocalDate date;
+
+    private List<LogExercise> logExercises;
 }

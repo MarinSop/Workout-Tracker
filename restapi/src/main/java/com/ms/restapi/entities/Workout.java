@@ -2,13 +2,13 @@ package com.ms.restapi.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -29,12 +29,11 @@ public class Workout {
     private String name;
 
     @OneToMany(mappedBy = "workout")
+    @JsonIgnoreProperties("workout")
     private List<WorkoutExercise> workoutExercises;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(mappedBy = "workouts")
-    private List<Log> logs;
 }

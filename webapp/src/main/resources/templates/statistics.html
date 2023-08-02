@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/statistics.css}">
+  <title>Statistics</title>
+</head>
+
+<body>
+  <div class="page">
+    <nav class="navbar">
+      <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/workouts">My Workouts</a></li>
+        <li><a href="/statistics" class="active">Statistics</a></li>
+      </ul>
+      <div class="logout-button">
+        <a href="/logout">Logout</a>
+      </div>
+    </nav>
+    <div class="main-content">
+        <h3 th:text="'Number of days you exercised in a month: ' + ${daysInMonth}"></h3>
+        <h3 th:text="'Number of days you exercised in a year: ' + ${daysInYear}"></h3>
+        <h3 th:text="'Number of exercises you have done: ' + ${allExercisesDone}"></h3>
+    </div>
+  </div>
+</body>
+
+</html>

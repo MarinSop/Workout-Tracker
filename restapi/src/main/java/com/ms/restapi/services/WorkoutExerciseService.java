@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.ms.restapi.entities.Exercise;
@@ -28,10 +29,10 @@ public class WorkoutExerciseService {
     @Autowired
     ExerciseRepository exeriseRep;
 
-    public List<WorkoutExercise> updateExercisesInWorkout(int id, List<WorkoutExercise> list)
+    public List<WorkoutExercise> updateExercisesInWorkout(int id, List<WorkoutExercise> list, Authentication auth)
     {
 
-        Workout workout = workoutRep.findById(id).orElseThrow(EntityNotFoundException::new);
+        Workout workout = workoutRep.findByIdAndUserUsername(id,auth.getName()).orElseThrow(EntityNotFoundException::new);
         list.forEach(e -> {
             Exercise exercise = exeriseRep.findById(e.getExercise().getId()).orElseThrow(EntityNotFoundException::new);
             e.setId(new WorkoutExerciseId(id, e.getExercise().getId()));

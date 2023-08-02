@@ -1,5 +1,7 @@
 package com.ms.restapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -19,10 +21,12 @@ public class LogExercise {
 
     @ManyToOne
     @MapsId("logId")
+        @JsonIgnoreProperties("logExercises")
     private Log log;
 
     @ManyToOne
     @MapsId("exerciseId")
+    @JsonIgnoreProperties("logExercises")
     private Exercise exercise;
 
     private int sets;

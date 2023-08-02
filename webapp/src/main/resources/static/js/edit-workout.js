@@ -31,8 +31,8 @@ function selectExercise(exerciseId,exerciseName)
         return;
     }
         let index = allSelectedExercises.length;
-        let parent = document.querySelector('.exercises');
-        let newExercise = document.createElement("div");
+        let parent = document.querySelector('tbody');
+        let newExercise = document.createElement("tr");
         newExercise.setAttribute("id",exerciseId);
         newExercise.setAttribute("class","exercise-group");
         parent.append(newExercise);
@@ -42,52 +42,63 @@ function selectExercise(exerciseId,exerciseName)
         exerciseIdElement.setAttribute("type","hidden");
         exerciseIdElement.setAttribute("name","workoutExercises["+ index +"].exercise.id");
         exerciseIdElement.setAttribute("value", exerciseId);
-        newExercise.append(exerciseIdElement);
 
-        let labelForName = document.createElement("label");
-        labelForName.innerText = "Name";
-        newExercise.appendChild(labelForName);
+        let tdName = document.createElement("td");
+        let divFormName = document.createElement("div");
+        divFormName.setAttribute("class","form-group");
         let exerciseNameElement = document.createElement("input");
         exerciseIdElement.setAttribute("id","workoutExercises"+index+".exercise.name")
         exerciseNameElement.setAttribute("type","text");
         exerciseNameElement.setAttribute("name","workoutExercises["+ index +"].exercise.name");
         exerciseNameElement.setAttribute("value", exerciseName);
         exerciseNameElement.readOnly = true;
-        newExercise.append(exerciseNameElement);
+        divFormName.append(exerciseNameElement);
+        divFormName.append(exerciseIdElement);
+        tdName.append(divFormName);
+        newExercise.append(tdName);
 
-        let labelForReps = document.createElement("label");
-        labelForReps.innerText = "Reps";
-        newExercise.appendChild(labelForReps);
-        let exerciseSetsElement = document.createElement("input");
-        exerciseIdElement.setAttribute("id","workoutExercises"+index+".reps")
-        exerciseSetsElement.setAttribute("type","number");
-        exerciseSetsElement.setAttribute("name","workoutExercises["+ index +"].reps");
-        exerciseSetsElement.setAttribute("value","0");
-        exerciseSetsElement.setAttribute("min","0");
-        newExercise.append(exerciseSetsElement);
-
-        let labelForSets = document.createElement("label");
-        labelForSets.innerText = "Sets";
-        newExercise.appendChild(labelForSets);
+        let tdReps = document.createElement("td");
+        let divFormReps = document.createElement("div");
+        divFormReps.setAttribute("class","form-group");
         let exerciseRepsElement = document.createElement("input");
-        exerciseIdElement.setAttribute("id","workoutExercises"+index+".sets")
+        exerciseIdElement.setAttribute("id","workoutExercises"+index+".reps")
         exerciseRepsElement.setAttribute("type","number");
-        exerciseRepsElement.setAttribute("name","workoutExercises["+ index +"].sets");
+        exerciseRepsElement.setAttribute("name","workoutExercises["+ index +"].reps");
         exerciseRepsElement.setAttribute("value","0");
         exerciseRepsElement.setAttribute("min","0");
-        newExercise.append(exerciseRepsElement);
+        divFormReps.append(exerciseRepsElement);
+        tdReps.append(divFormReps);
+        newExercise.append(tdReps);
 
-        let labelForWeight = document.createElement("label");
-        labelForWeight.innerText = "Weight";
-        newExercise.appendChild(labelForWeight);
+        let tdSets = document.createElement("td");
+        let divFormSets = document.createElement("div");
+        divFormSets.setAttribute("class","form-group");
+        let exerciseSetsElement = document.createElement("input");
+        exerciseIdElement.setAttribute("id","workoutExercises"+index+".sets")
+        exerciseSetsElement.setAttribute("type","number");
+        exerciseSetsElement.setAttribute("name","workoutExercises["+ index +"].sets");
+        exerciseSetsElement.setAttribute("value","0");
+        exerciseSetsElement.setAttribute("min","0");
+        divFormSets.append(exerciseSetsElement);
+        tdSets.append(divFormSets);
+        newExercise.append(tdSets);
+
+        let tdWeight = document.createElement("td");
+        let divFormWeight = document.createElement("div");
+        divFormWeight.setAttribute("class","form-group");
         let exerciseWeightElement = document.createElement("input");
         exerciseIdElement.setAttribute("id","workoutExercises"+index+".weight")
         exerciseWeightElement.setAttribute("type","number");
         exerciseWeightElement.setAttribute("name","workoutExercises["+ index +"].weight");
         exerciseWeightElement.setAttribute("value","0");
         exerciseWeightElement.setAttribute("min","0");
-        newExercise.append(exerciseWeightElement);
+        divFormWeight.append(exerciseWeightElement);
+        tdWeight.append(divFormWeight);
+        newExercise.append(tdWeight);
 
+        let tdDelete = document.createElement("td");
+        let divFormDelete = document.createElement("div");
+        divFormDelete.setAttribute("class","form-group");
         let deleteButton = document.createElement("input");
         deleteButton.setAttribute("type","button");
         deleteButton.setAttribute("value","X");
@@ -96,5 +107,7 @@ function selectExercise(exerciseId,exerciseName)
             const id = event.target.dataset.exerciseId;
             deleteExercise(id);
         });
-        newExercise.append(deleteButton);
+        divFormDelete.append(deleteButton);
+        tdDelete.append(divFormDelete);
+        newExercise.append(tdDelete);
 }

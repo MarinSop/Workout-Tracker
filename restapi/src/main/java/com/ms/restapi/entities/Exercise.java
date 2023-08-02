@@ -1,6 +1,7 @@
 package com.ms.restapi.entities;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,9 +28,11 @@ public class Exercise {
     private String name;
 
     @OneToMany(mappedBy = "exercise")
+    @JsonIgnoreProperties("exercise")
     private List<WorkoutExercise> workoutExercises;
 
     @OneToMany(mappedBy = "exercise")
+    @JsonIgnoreProperties("exercise")
     private List<LogExercise> logExercises;
 
     @ManyToOne

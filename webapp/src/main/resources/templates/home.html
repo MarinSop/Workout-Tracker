@@ -1,36 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/home.css">
-    <title>Home</title>
-</head>
-<body>
-    <div class="page">
-        <nav class="navbar">
-          <img src="your-logo.png" alt="Logo">
-          <ul>
-            <li><a href="/home" class="active">Home</a></li>
-            <li><a href="/workouts">My Workouts</a></li>
-          </ul>
-          <div class="logout-button">
-            <a href="/logout" >Logout</a>
-          </div>
-        </nav>
-        <div class="main-content">
-          <div class="workouts-section">
-            <div class="workouts-section-header">
-                <span>Workouts done today</span>
-                <div class="add-workout-button"><a href="/home">Add workout</a></div>
-            </div>
-            <div class="workout-list">
-                <ul>
 
-                </ul>
-            </div>
-          </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/home.css">
+  <title>Home</title>
+</head>
+
+<body>
+  <div class="page">
+    <nav class="navbar">
+      <ul>
+        <li><a href="/home" class="active">Home</a></li>
+        <li><a href="/workouts">My Workouts</a></li>
+        <li><a href="/statistics">Statistics</a></li>
+      </ul>
+      <div class="logout-button">
+        <a href="/logout">Logout</a>
+      </div>
+    </nav>
+    <div class="main-content">
+      <div class="logging-section">
+
+        <div class="workouts-section">
+          <form action="/home/log-workout" method="post">
+            <input type="hidden" name="date" th:value="${date}">
+            <select name="workoutId">
+              <option th:each="workout : ${allWorkouts}" th:value="${workout.id}" th:text="${workout.name}">
+              </option>
+              <input class="add-workout-button"type="submit" value="Log a workout">
+            </select>
+          </form>
         </div>
+        <div class="exercise-section">
+          <form action="/home/log-exercise" method="post" class="form-container" onsubmit="return validateForm()">
+            <div class="selects">
+              <input type="hidden" name="date" th:value="${date}">
+              <select name="category-select" onchange="selectCategory(this.options[this.selectedIndex].value)">
+                <option selected disabled>Select an exercise category</option>
+                <option th:each="category : ${exerciseCategories}" th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
+    
+            <select class="exercise-select" name="exercise-select" required onchange="enableSubmitButton()">
+                <option selected disabled>Select an exercise</option>
+                <option th:each="exercise : ${allExercises}" th:value="${exercise.id}" th:text="${exercise.name}"
+                        th:data-category="${exercise.category.id}" style="display: none;"></option>
+            </select>
+
+            </div>
+            <div class="numbers">
+              <input type="number" name="reps" value="0" min="0">
+              <input type="number" name="sets" value="0" min="0">
+              <input type="number" name="weight" value="0" min="0">
+            </div>
+            <input type="submit" value="Log a exericse" id="submit-button" disabled>
+          </form>
+        </div>
+      </div>
+
+
+      <div class="date-navigation">
+        <a th:href="@{/home?date={dateDec}(dateDec=${dateDec})}">&larr;</a>
+        <span th:if="${!today and !yesterday and !tommorow}" th:text="${dateFormated}"></span>
+        <span th:if="${today}">Today</span>
+        <span th:if="${yesterday}">Yesterday</span>
+        <span th:if="${tommorow}">Tommorow</span>
+        <a th:href="@{/home?date={dateInc}(dateInc=${dateInc})}">&rarr;</a>
+      </div>
+
+      <div class="exercise-list">
+        <table>
+          <thead>
+            <tr>
+              <th>Exercise name</th>
+              <th>Reps</th>
+              <th>Sets</th>
+              <th>Weight (kg)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="exercise : ${logExercisePage.content}">
+              <td th:text="${exercise.exercise.name}"></td>
+              <td th:text="${exercise.reps}"></td>
+              <td th:text="${exercise.sets}"></td>
+              <td th:text="${exercise.weight}"></td>
+              <td><a
+                  th:href="@{/home/delete-exercise(logId=${exercise.id.logId}, exerciseId=${exercise.id.exerciseId}, date=${date}, page=${page})}"
+                  class="delete-button">&#x58;</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="page-navigation">
+          <a th:if="${!logExercisePage.first}" th:href="@{/home(page='1', date=${date})}">First</a>
+          <a th:each="i : ${#numbers.sequence(3, 1, -1)}" th:unless="${0 > logExercisePage.number - i}"
+            th:text="${logExercisePage.number + 1 - i}"
+            th:href="@{/home(page=${logExercisePage.number + 1 - i}, date=${date})}"></a>
+          <a class="active-page" th:text="${logExercisePage.number + 1}"
+            th:href="@{/home(page=${logExercisePage.number + 1}, date=${date})}"></a>
+          <a th:each="i : ${#numbers.sequence(1, 3, 1)}"
+            th:unless="${logExercisePage.number + i >= logExercisePage.totalPages}"
+            th:text="${logExercisePage.number + 1 + i}"
+            th:href="@{/home(page=${logExercisePage.number + 1 + i}, date=${date})}"></a>
+          <a th:if="${!logExercisePage.last}"
+            th:href="@{/home(page=${logExercisePage.totalPages}, date=${date})}">Last</a>
+        </div>
+
+      </div>
     </div>
+  </div>
+  <script>
+
+function selectCategory(categoryId) {
+        const exerciseSelect = document.querySelector(".exercise-select");
+        const allExerciseOptions = exerciseSelect.querySelectorAll("option");
+        
+        allExerciseOptions.forEach((option) => {
+            const exerciseCategory = option.getAttribute("data-category");
+            if (exerciseCategory === categoryId || categoryId === "") {
+                option.style.display = "block";
+            } else {
+                option.style.display = "none";
+            }
+        });
+        
+        exerciseSelect.value = '';
+    }
+
+    function enableSubmitButton() {
+        const exerciseSelect = document.querySelector("select[name='exercise-select']");
+        const submitButton = document.getElementById("submit-button");
+        
+        if (exerciseSelect.value !== "" && exerciseSelect.value !== null) {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+      }
+
+  </script>
 </body>
+
 </html>

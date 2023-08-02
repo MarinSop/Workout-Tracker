@@ -36,14 +36,14 @@ public class WorkoutService {
     @Autowired
     WorkoutExerciseService workoutExerciseSer;
 
-    public List<Workout> getAll()
+    public List<Workout> getAll(Authentication auth)
     {
-        return rep.findAll();
+        return rep.findAllByUserUsername(auth.getName());
     }
 
-        public Workout getByID(int id)
+        public Workout getByID(int id, Authentication auth)
     {
-        return rep.findById(id).orElseThrow(EntityNotFoundException::new);
+        return rep.findByIdAndUserUsername(id,auth.getName()).orElseThrow(EntityNotFoundException::new);
     }
 
     public Workout addWorkout(Workout workout, Authentication authentication)
@@ -53,27 +53,27 @@ public class WorkoutService {
         return rep.save(workout);
     }
      
-    public Workout editWorkout(Workout workout, int workoutId)
+    public Workout editWorkout(Workout workout, int workoutId, Authentication auth)
     {
 
-        Workout existingWorkout = rep.findById(workoutId).orElseThrow(EntityNotFoundException::new);
+        Workout existingWorkout = rep.findByIdAndUserUsername(workoutId, auth.getName()).orElseThrow(EntityNotFoundException::new);
         existingWorkout.setName(workout.getName());
-        existingWorkout.setWorkoutExercises(workoutExerciseSer.updateExercisesInWorkout(workoutId, workout.getWorkoutExercises()));
+        existingWorkout.setWorkoutExercises(workoutExerciseSer.updateExercisesInWorkout(workoutId, workout.getWorkoutExercises(), auth));
         return rep.save(existingWorkout);
     }
 
-    public String deleteWorkout(int id)
+    public String deleteWorkout(int id, Authentication auth)
     {
-        Workout workout = rep.findById(id).orElseThrow(EntityNotFoundException::new);
+        Workout workout = rep.findByIdAndUserUsername(id,auth.getName()).orElseThrow(EntityNotFoundException::new);
         workout.getWorkoutExercises().forEach(e -> {workoutExerciseSer.delete(id, e.getExercise().getId());});
         workout.getWorkoutExercises().clear();
         rep.delete(workout);
         return "Workout deleted succesfully!";
     }
 
-    public WorkoutExercise addExerciseToWorkout(int workoutId,int exerciseId,int sets, int reps, int weight)
+    public WorkoutExercise addExerciseToWorkout(int workoutId,int exerciseId,int sets, int reps, int weight, Authentication auth)
     {
-        Workout workout = rep.findById(workoutId).orElseThrow(EntityNotFoundException::new);
+        Workout workout = rep.findByIdAndUserUsername(workoutId, auth.getName()).orElseThrow(EntityNotFoundException::new);
         Exercise exercise = exerciseRep.findById(exerciseId).orElseThrow(EntityNotFoundException::new);
         WorkoutExercise workoutExercise = new WorkoutExercise();
         workoutExercise.setId(new WorkoutExerciseId(workoutId, exerciseId));

@@ -1,16 +1,16 @@
 package com.ms.restapi.entities;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -27,21 +27,17 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
-    private LocalDateTime date;
+    @Column(nullable = false)
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "log")
+    @JsonIgnoreProperties("log")
     private List<LogExercise> logExercises;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "log_workout", 
-      joinColumns = @JoinColumn(name = "workout_id", referencedColumnName = "id"), 
-      inverseJoinColumns = @JoinColumn(name = "log_id", 
-      referencedColumnName = "id"))
-    private List<Workout> workouts;
     
 
 
